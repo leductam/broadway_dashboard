@@ -11,9 +11,8 @@ defmodule BroadwayDashboard do
 
   # We check the Broadway version installed on remote nodes.
   # This should match mix.exs.
-  @minimum_broadway_version "0.7.0-dev"
+  @minimum_broadway_version "1.0.0"
 
-  # TODO: update link
   @disabled_link "https://hexdocs.pm/broadway_dashboard"
   @page_title "Broadway pipelines"
 
@@ -42,26 +41,25 @@ defmodule BroadwayDashboard do
         {:ok, pipeline_config}
 
       pipeline_config == :auto_discover ->
-        case check_broadway_version(node) do
-          :ok ->
-            # TODO: fix case when pids are returned
-            case :rpc.call(node, Broadway, :all_running, []) do
-              [_ | _] = pipelines ->
-                {:ok, pipelines}
-
-              [] ->
-                {:error, :no_pipelines_available}
-
-              {:badrpc, _error} ->
-                {:error, :cannot_list_running_pipelines}
-            end
-
-          {:error, _} = error ->
-            error
+        with :ok <- check_broadway_version(node) do
+          running_pipelines(node)
         end
 
       true ->
         {:error, :no_pipelines_available}
+    end
+  end
+
+  defp running_pipelines(node) do
+    case :rpc.call(node, Broadway, :all_running, []) do
+      pipelines when is_list(pipelines) ->
+        case Enum.filter(pipelines, &is_atom/1) do
+          [] -> {:error, :no_pipelines_available}
+          pipelines_names -> {:ok, pipelines_names}
+        end
+
+      {:badrpc, _error} ->
+        {:error, :cannot_list_running_pipelines}
     end
   end
 
@@ -121,7 +119,7 @@ defmodule BroadwayDashboard do
     ArgumentError -> nil
   end
 
-  def check_socket_connection(socket) do
+  defp check_socket_connection(socket) do
     if connected?(socket) do
       :ok
     else
@@ -220,6 +218,9 @@ defmodule BroadwayDashboard do
 
         :cannot_list_running_pipelines ->
           "Could not list running pipelines at remote node. Please try again later."
+
+        :not_able_to_start_remotely ->
+          "Could not start the metrics server remotely. Please try again later."
 
         {:badrpc, _} ->
           "Could not send request to node. Try again later."

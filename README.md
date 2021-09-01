@@ -8,14 +8,16 @@
 pipelines. It provides some insights about performance and errors for
 your running pipelines.
 
-It works as an additional page for the [`Phoenix Live Dashboard`](https://hexdocs.pm/phoenix_live_dashboard).
+It works as an additional page for the [`Phoenix LiveDashboard`](https://hexdocs.pm/phoenix_live_dashboard).
 
 You can inspect pipelines on remote nodes that are not running `BroadwayDashboard` too.
 See [Distribution](#distribution) for details.
 
-## Integration with Phoenix Live Dashboard
+![Broadway Dashboard](https://raw.githubusercontent.com/dashbitco/broadway_dashboard/4da2a5f388a7579d41b63803652796c106b74785/priv/static/broadway-dashboard-01.gif)
 
-You can add this page to your Phoenix Live Dashboard by adding as a page in
+## Integration with Phoenix LiveDashboard
+
+You can add this page to your Phoenix LiveDashboard by adding as a page in
 the `live_dashboard` macro at your router file.
 
 ```elixir
@@ -26,7 +28,7 @@ live_dashboard "/dashboard",
 ```
 
 The `:pipelines` option accept pipeline names (the `:name` option of your Broadway).
-By ommiting the `:pipelines` option, `BroadwayDashboard` will try to autodiscover your pipelines.
+By omitting the `:pipelines` option, `BroadwayDashboard` will try to autodiscover your pipelines.
 
 ```elixir
 live_dashboard "/dashboard",
@@ -39,7 +41,7 @@ Once configured, you will be able to access the `BroadwayDashboard` at `/dashboa
 
 ## Distribution
 
-**Phoenix Live Dashboard** works with distribution out of the box, and it's not different
+**Phoenix LiveDashboard** works with distribution out of the box, and it's not different
 with **Broadway Dashboard**! You can inspect your pipelines that are running on connected nodes.
 
 You can also inspect pipelines from nodes that are not running the same system of
@@ -47,7 +49,7 @@ your dashboard. This is possible because we "copy" the essential parts of this
 tool to the remote node when it's not running `BroadwayDashboard`. We stop the tracking
 once the node that started it is disconnected.
 
-<!-- MDOC -->
+<!-- MDOC !-->
 
 ## Installation
 
@@ -61,7 +63,7 @@ def deps do
 end
 ```
 
-After that, proceed with instructions described in **Integration with Phoenix Live Dashboard** above.
+After that, proceed with instructions described in **Integration with Phoenix LiveDashboard** above.
 
 ## Acknowledgment
 
